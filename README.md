@@ -1,0 +1,2 @@
+# SetJavaVersion
+这是一个用python制作的能让您快速更改您的JAVA版本的简易软件
