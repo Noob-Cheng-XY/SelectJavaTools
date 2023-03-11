@@ -8,7 +8,7 @@ class SetJavaVersion:
         self.JavaVersionList = {}
         self.AppData = os.environ.get("AppData")
 
-        print("欢迎使用Java切换器! 建议以管理员身份运行, 在可输入的地方输入help查看帮助")
+        print("欢迎使用Java切换器! 请以管理员身份运行, 在可输入的地方输入help查看帮助")
 
         with open(f"{self.AppData}\\SetJavaVersion\\JavaPath.json", "r+") as f1:
             self.JavaList = json.loads(f1.read(), strict = False)
@@ -66,7 +66,7 @@ Java路径保存位置:
         finally:
             t1 = 0
             for NowJavaVersion in self.JavaList.keys():
-                if NowJavaVersion == NowJavaPath:
+                if self.JavaList[NowJavaVersion] == NowJavaPath:
                     print(f"当前Java为{NowJavaVersion}, 位于{NowJavaPath}")
                     continue
                 else:
@@ -84,21 +84,20 @@ Java路径保存位置:
         while True:
             try:
                 version = str(input("请输入要切换的Java版本: "))
-                self.JavaList{version}
+                self.JavaList[version]
             except:
-                print("")
-            print("正在更改用户变量...")
-            os.system(f"setx \"JAVA_HOME\" \"{self.JavaList[version]}")
-
-            print("\n")
-
-            print("正在更改系统变量...")
-            os.system(f"setx -m \"JAVA_HOME\" \"{self.JavaList[version]}")
-
-            time.sleep(2)
-            exit()
-            else:
                 print("当前没有该Java, 若您已安装该Java, 请输入add添加Java")
+            else:
+                print("正在更改用户变量...")
+                os.system(f"setx \"JAVA_HOME\" \"{self.JavaList[version]}")
+
+                print("\n")
+
+                print("正在更改系统变量...")
+                os.system(f"setx -m \"JAVA_HOME\" \"{self.JavaList[version]}")
+
+                time.sleep(2)
+                exit()
 
 if __name__ == "__main__":
     SetJavaVersion()
