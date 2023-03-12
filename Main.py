@@ -22,25 +22,44 @@ class SetJavaVersion:
         else:
             self.SettingJavaVersion()
 
+    def reinput(self, values):
+        out = input(values)
+        if out == "help":
+            self.help()
+        elif out == "add":
+            self.add()
+        elif out == "remove":
+            self.remove()
+        elif out == "reset":
+            self.reset()
 
     def help():
         print("""
 帮助文档
-常用指令:
-    1. help
-    打开帮助文档
-    2. add
-    打开 [添加新的Java] 面板
-    3. remove
-    打开 [移除一个Java] 面板
-    4. reset
-    移除所有该程序修改过的系统变量(不包括JAVA_HOME)
+    常用指令:
+        1. help
+        打开帮助文档
+        2. add
+        打开 [添加新的Java] 面板
+        3. remove
+        打开 [移除一个Java] 面板
+        4. reset
+        移除所有该程序修改过的系统变量(不包括JAVA_HOME)
 
-Java路径保存位置: 
-    %AppData%\\SetJavaVersion
+    Java路径保存位置: 
+        %AppData%\\SetJavaVersion
 
-声明: 该程序由Wen_Shao制作, 使用程序或源码时请标明出处
+声明: 该程序由Wen_Shao制作, 使用程序或源码时请开源
             """)
+        
+    def add():
+        print("开发中, 敬请期待,")
+
+    def remove():
+        print("开发中, 敬请期待,")
+
+    def reset():
+        print("开发中, 敬请期待,")
 
     def FirstStart(self):
 
