@@ -129,6 +129,7 @@ class SetJavaVersion:
                 self.JavaList[version]
             except:
                 print("当前没有该Java, 若您已安装该Java, 请输入add添加Java")
+                os.system("cls")
             else:
                 print("\n正在更改用户变量...")
                 p = subprocess.Popen(
@@ -154,7 +155,7 @@ class SetJavaVersion:
                 if "成功" in stdout.decode("GBK"):
                     print("\n保存成功!")
                 else:
-                    print("\n保存失败! 可能是使用管理员权限启动")
+                    print("\n保存失败! 可能是使用未管理员权限启动")
 
                 time.sleep(2)
                 exit()
