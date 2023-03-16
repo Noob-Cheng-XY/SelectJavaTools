@@ -10,7 +10,7 @@ class SetJavaVersion:
 
         print("欢迎使用Java切换器! 请以管理员身份运行, 在可输入的地方输入help查看帮助")
 
-        with open(f"{self.AppData}\\SetJavaVersion\\JavaPath.json", "r+") as f1:
+        with open(f"{self.AppData}\\SetJavaVersion\\JavaPath.json", "r+",) as f1:
             self.JavaList = json.loads(f1.read(), strict = False)
 
         if not os.path.exists(f"{self.AppData}\\SetJavaVersion"):
@@ -22,16 +22,30 @@ class SetJavaVersion:
         else:
             self.SettingJavaVersion()
 
-    def reinput(self, values):
+    def reinput(self, values, nowmod = None):
         out = input(values)
         if out == "help":
-            self.help()
+            if nowmod != "help":
+                self.help()
+            else:
+                print("你已经在该模式中")
         elif out == "add":
-            self.add()
+            if nowmod != "add":
+                self.add()
+            else:
+                print("你已经在该模式中")
         elif out == "remove":
-            self.remove()
+            if nowmod != "remove":
+                self.remove()
+            else:
+                print("你已经在该模式中")
         elif out == "reset":
-            self.reset()
+            if nowmod != "reset":
+                self.reset()
+            else:
+                print("你已经在该模式中")
+        else:
+            return out
 
     def help():
         print("""
@@ -52,29 +66,37 @@ class SetJavaVersion:
 声明: 该程序由Wen_Shao制作, 使用程序或源码时请开源
             """)
         
-    def add():
-        print("开发中, 敬请期待,")
-
-    def remove():
-        print("开发中, 敬请期待,")
-
-    def reset():
-        print("开发中, 敬请期待,")
-
-    def FirstStart(self):
+    def add(self):
 
         import json
+        import os
 
-        n1 = input("请问你要添加多少个Java: ")
+        os.system("cls")
 
-        for j in range(int(n1)):
-            JavaVersion = input(f"请输入第{j + 1}个Java版本号(Java8就写8, Java17就写17): ")
-            VersionPath = input(f"请输入第{j + 1}个Java目录(例: C:\Program Files\Java\Jre_8u231): ")
+        n1 = self.reinput("请问你要添加多少个Java: ")
 
-        self.JavaList[f"{JavaVersion}"] = VersionPath
+        for i in range(int(n1)):
+            JavaVersion = self.reinput(f"请输入您要导入的第{i + 1}个Java版本名(自定义, 啥都行): ")
+            VersionPath = self.reinput(f"请输入您要导入的第{i + 1}个Java目录(例: C:\Program Files\Java\Jre_8u231): ")
+
+        self.JavaList[JavaVersion] = VersionPath
         with open(f"{self.AppData}\\SetJavaVersion\\JavaPath.json", "w+") as f1:
             json.dump(self.JavaList, f1, indent = 4)
 
+    def remove(self):
+        import os
+
+        os.system("cls")
+        print("开发中, 敬请期待,")
+
+    def reset(self):
+        import os
+
+        os.system("cls")
+        print("开发中, 敬请期待,")
+
+    def FirstStart(self):
+        self.add()
         self.SettingJavaVersion()
         
     def GetNowJava(self):
@@ -97,23 +119,42 @@ class SetJavaVersion:
 
         import os
         import time
+        import subprocess
 
         self.GetNowJava()
         
         while True:
             try:
-                version = str(input("请输入要切换的Java版本: "))
+                version = str(self.reinput("请输入要切换的Java版本: "))
                 self.JavaList[version]
             except:
                 print("当前没有该Java, 若您已安装该Java, 请输入add添加Java")
             else:
-                print("正在更改用户变量...")
-                os.system(f"setx \"JAVA_HOME\" \"{self.JavaList[version]}")
+                print("\n正在更改用户变量...")
+                p = subprocess.Popen(
+                    f"setx \"JAVA_HOME\" \"{self.JavaList[version]}", 
+                    shell = True, 
+                    stdout = subprocess.PIPE, 
+                    stderr = subprocess.PIPE,
+                    )
+                stdout, stderr = p.communicate()
+                if "成功" in stdout.decode("GBK"):
+                    print("\n保存成功!")
+                else:
+                    print("保存失败! 可能是使用管理员权限启动")
 
-                print("\n")
-
-                print("正在更改系统变量...")
-                os.system(f"setx -m \"JAVA_HOME\" \"{self.JavaList[version]}")
+                print("\n正在更改系统变量...")
+                p = subprocess.Popen(
+                    f"setx -m \"JAVA_HOME\" \"{self.JavaList[version]}",
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    )
+                stdout, stderr = p.communicate()
+                if "成功" in stdout.decode("GBK"):
+                    print("\n保存成功!")
+                else:
+                    print("\n保存失败! 可能是使用管理员权限启动")
 
                 time.sleep(2)
                 exit()
