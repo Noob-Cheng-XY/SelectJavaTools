@@ -263,7 +263,6 @@ class SetJavaVersion:
 
         import os
         import time
-        import subprocess
         import sys
         from tabulate import tabulate
         import threading
@@ -387,6 +386,4 @@ class SetJavaVersion:
 
 
 if __name__ == "__main__":
-    import pdb
-
     SetJavaVersion()
