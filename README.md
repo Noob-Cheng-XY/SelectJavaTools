@@ -1,4 +1,4 @@
-# SetJavaVersion（设置Java版本）
+# SelectJavaTools（选择Java工具）
 
 ## 简介：
 
@@ -6,7 +6,7 @@
 
 使用方法：
 
-第一次使用时会出现引导，根据引导先输入要加多少个Java，然后输入第一个Java的版本号，再输入第一个Java的路径，以此类推，然后结束引导。之后输入Java版本号即可更换Java。
+1. 从旁边的 [release](https:\\github.com\Noob-Cheng-XY\SelectJavaVersion\release "点我传送到release(构建)")
 
 ## 更新日志：
 [点我传送到更新日志](https:\\github.com\WenShao233\SetJavaVersion\Wiki\更新日志 "点我传送到更新日志")
