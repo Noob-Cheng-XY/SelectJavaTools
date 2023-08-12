@@ -1,51 +1,6 @@
 class SetJavaVersion:
     def __init__(self) -> None:
-        # 初始化
-
-        import os
-        import json
-        # 导入模块
-
-        self.java_list = {}
-        self.JavaVersionList = {}
-        self.AppData = f"{os.environ.get('Appdata')}\\SetJavaVersion"
-        self.Temp = f"{os.environ.get('Temp')}\\SetJavaVersion"
-        self.CommandList = ["help", "add", "remove", "reset"]
-        self.Backup = f"{self.AppData}\\Backup"
-        self.start = None
-        # 设置可能需要用到的全局变量
-
-        self.admini()  # 检测是否以管理员身份运行
-        self.find_java_list = self.find_java()  # 搜索Java
-
-        print("欢迎使用Java切换器!")
-
-        if not os.path.exists(self.AppData):  # 判断是否存在配置文件夹
-            os.makedirs(self.AppData, exist_ok=True)
-            os.makedirs(self.Backup, exist_ok=True)
-            with open(f"{self.AppData}\\JavaPath.json", "w") as f1:
-                self.java_list = {}
-                f1.write("{}")
-            # 不存在，创建目录和配置文件
-        else:
-            # 存在，检查配置文件是否存在切不为空
-            if os.path.isfile(f"{self.AppData}\\JavaPath.json"):
-                # 存在，读取
-                with open(f"{self.AppData}\\JavaPath.json", "r+", encoding="utf-8") as f1:
-                    f1_txt = f1.read().replace(" ", "")
-                    if f1_txt == "{}":
-                        self.java_list = {}
-                    elif f1_txt == "":
-                        self.java_list = {}
-                        f1.write("{}")
-                    else:
-                        self.java_list = json.loads(f1_txt)
-            else:
-                with open(f"{self.AppData}\\JavaPath.json", "w") as f1:
-                    self.java_list = {}
-                    f1.write("{}")
-            self.start = True
-            self.setting_java_version()
+        pass
 
     def find_java(self):
         import os
@@ -64,11 +19,11 @@ class SetJavaVersion:
                 p32 = f"{chr(i)}:\\Program Files (x86)\\Java"
             if os.path.exists(p64):
                 for j in os.listdir(p64):
-                    if os.path.exists(f"{p64}\\{j}\\bin"):
-                        if "java.exe" not in os.listdir(f"{p64}\\{j}\\bin") and "javaw" not in os.listdir(
-                                f"{p64}\\{j}\\bin"):
+                    if os.path.exists(f"{p64}\\{j}\\package"):
+                        if "java.exe" not in os.listdir(f"{p64}\\{j}\\package") and "javaw" not in os.listdir(
+                                f"{p64}\\{j}\\package"):
                             continue
-                        if "javac.exe" in os.listdir(f"{p64}\\{j}\\bin"):
+                        if "javac.exe" in os.listdir(f"{p64}\\{j}\\package"):
                             attribute = "JDK x64"
                         else:
                             attribute = "JRE x64"
@@ -89,11 +44,11 @@ class SetJavaVersion:
                                                      "attribute": attribute}
             if os.path.exists(p32):
                 for j in os.listdir(p32):
-                    if os.path.exists(f"{p32}\\{j}\\bin"):
-                        if "java.exe" not in os.listdir(f"{p64}\\{j}\\bin") and "javaw" not in os.listdir(
-                                f"{p64}\\{j}\\bin"):
+                    if os.path.exists(f"{p32}\\{j}\\package"):
+                        if "java.exe" not in os.listdir(f"{p64}\\{j}\\package") and "javaw" not in os.listdir(
+                                f"{p64}\\{j}\\package"):
                             break
-                        if "javac.exe" in os.listdir(f"{p32}\\{j}\\bin"):
+                        if "javac.exe" in os.listdir(f"{p32}\\{j}\\package"):
                             attribute = "JDK x32"
                         else:
                             attribute = "JRE x32"
@@ -112,18 +67,6 @@ class SetJavaVersion:
                     find_java_list[f"f_{t2 + 1}"] = {"name": "自动查找{count}", "path": f"{p32}\\{j}",
                                                      "version": java_version, "attribute": attribute}
         return find_java_list
-
-    def admini(self):
-        import ctypes
-        import sys
-
-        if ctypes.windll.shell32.IsUserAnAdmin():
-            return
-        else:
-            ret = ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, sys.argv[0], None, 1)
-            if ret <= 32:
-                raise Exception("无法以管理员身份运行脚本")
-            sys.exit()
 
     def new_input(self, values, now_mode=None, w_type: type = str):
         out = input(values)
@@ -176,7 +119,7 @@ class SetJavaVersion:
         移除所有该程序修改过的系统变量
 
     Java路径保存位置: 
-        %AppData%\\SetJavaVersion
+        %AppData%\\SelectJavaTools
 
 声明: 该程序由程虚员制作, 使用程序或源码时请开源
             """)
@@ -196,9 +139,9 @@ class SetJavaVersion:
             java_path = self.new_input(f"请输入您要导入的第{i + 1}个Java目录: ", "add")
             if java_path[-1] == "\\":
                 java_path = java_path[:-1]
-            if java_path[-4:] == "\\bin":
+            if java_path[-4:] == "\\package":
                 java_path = java_path[:-4]
-            if "javac" in os.listdir(f"{java_path}\\bin"):
+            if "javac" in os.listdir(f"{java_path}\\package"):
                 attribute = "JDK"
             else:
                 attribute = "JRE"
@@ -270,13 +213,16 @@ class SetJavaVersion:
         class Thread(threading.Thread):
             def __init__(self, target, args=()):
                 super().__init__()
-                self.target = target
-                self.args = args
+                self._target = target
+                self._args = args
                 self.result = None
 
             def run(self):
-                self.result = self.target(*self.args)
-                super().run()
+                try:
+                    if self._target is not None:
+                        self.result = self._target(*self._args)
+                finally:
+                    del self._target, self._args
 
         self.now_java()
 
@@ -317,10 +263,9 @@ class SetJavaVersion:
                             out, err = T1.result
                             break
 
-
                     if "JDK" in self.find_java_list[i]["attribute"]:
                         T2 = Thread(target=self.popen, args=(
-                        f"wmic ENVIRONMENT where \"name = 'java_class' and username='<system>'\" set VariableValue = \"%JAVA_HOME%\\lib\\dt.jar;%JAVA_HOME%\\lib\\tools.jar\"",))
+                            f"wmic ENVIRONMENT where \"name = 'java_class' and username='<system>'\" set VariableValue = \"%JAVA_HOME%\\lib\\dt.jar;%JAVA_HOME%\\lib\\tools.jar\"",))
                         T2.start()
                         print("\n")
                         while True:
@@ -344,7 +289,8 @@ class SetJavaVersion:
                                 out, err = T2.result
                                 break
 
-                    T3 = Thread(target=self.popen, args=("wmic ENVIRONMENT where \"name = 'path' and username='<system>'\" get VariableValue",))
+                    T3 = Thread(target=self.popen, args=(
+                        "wmic ENVIRONMENT where \"name = 'path' and username='<system>'\" get VariableValue",))
                     T3.start()
                     print("\n")
                     while True:
@@ -361,7 +307,7 @@ class SetJavaVersion:
                         "                                                                             ",
                         "")
                     path = path.replace("\r\r\n", "")
-                    if "%JAVA_HOME%\\bin\\" not in path:
+                    if "%JAVA_HOME%\\package\\" not in path:
                         T4 = Thread(target=self.popen, args=(
                             "wmic ENVIRONMENT where \"name = 'path' and username='<system>'\" get VariableValue",))
                         T4.start()
@@ -387,3 +333,25 @@ class SetJavaVersion:
 
 if __name__ == "__main__":
     SetJavaVersion()
+
+
+class Main():
+    def __init__(self):
+        import package as p
+        from package import PATH  # 导入附属库
+        from os import environ
+
+        test_file = [
+            f"{PATH['Appdata']}\\JavaPath.json"
+        ]
+        test_folder = [
+
+        ]
+        for i in PATH:
+            test_folder.append(i)
+
+        p.get_admini()
+        java_list = p.config.get_json(PATH, "JavaPath.json")
+        java_list = p.find_java(java_list)
+
+        print("欢迎使用Java切换器!")
