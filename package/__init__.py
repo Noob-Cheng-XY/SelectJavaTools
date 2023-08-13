@@ -8,9 +8,10 @@ version = "0.1.0"
 # 初始化
 
 from os import environ
-from get_admini import main as get_admini
-from find_java import main as find_java
-import config
+from .get_admini import main as get_admini
+from .find_java import main as find_java
+from .popen import main as popen
+import package.config
 
 # 导入模块
 

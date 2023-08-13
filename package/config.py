@@ -1,15 +1,17 @@
-def get_json(PATH, file_name):
+def get_json(file_name):
     import os
     import json
+    from package import PATH
+
     if not os.path.exists(PATH["AppData"]):  # 判断是否存在配置文件夹
         os.mkdir(PATH["AppData"])
-        with open(f"{PATH['AppData']}\\JavaPath.json", "w") as f1:
+        with open(f"{PATH['AppData']}\\{file_name}.json", "w") as f1:
             out = {}
             f1.write("{}")
         # 不存在，创建目录和配置文件
     else:
         # 存在，检查配置文件是否存在切不为空
-        if os.path.isfile(f"{PATH['AppData']}\\JavaPath.json"):
+        if os.path.isfile(f"{PATH['AppData']}\\{file_name}.json"):
             # 存在，读取
             with open(f"{PATH['AppData']}\\{file_name}", "r+", encoding="utf-8") as f1:
                 f1_txt = f1.read().replace(" ", "")
@@ -21,7 +23,7 @@ def get_json(PATH, file_name):
                 else:
                     out = json.loads(f1_txt)
         else:
-            with open(f"{PATH['AppData']}\\JavaPath.json", "w") as f1:
+            with open(f"{PATH['AppData']}\\{file_name}.json", "w") as f1:
                 out = {}
                 f1.write("{}")
 
